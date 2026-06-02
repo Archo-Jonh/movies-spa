@@ -50,8 +50,8 @@ describe('omdb service', () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'test' })
       const url = globalThis.fetch.mock.calls[0][0]
-      expect(url).not.toContain('type=')
-      expect(url).not.toContain('y=')
+      expect(url).not.toContain('&type=')
+      expect(url).not.toContain('&y=')
     })
 
     it('defaults to page 1', async () => {
