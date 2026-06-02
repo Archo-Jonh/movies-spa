@@ -95,3 +95,19 @@ No additional runtime libraries — pure React hooks and the browser's native `f
 **Accessibility** — Modal uses `role="dialog"`, `aria-modal="true"`, focus trap (Tab/Shift-Tab cycling), and `Escape` to close. Favorite buttons use `aria-pressed`. Loading states use `aria-live` and `aria-busy`. All interactive elements have descriptive `aria-label` attributes.
 
 **API key security** — Key is stored in a `.env` file (gitignored) and accessed via `import.meta.env.VITE_OMDB_KEY`. Never hard-coded.
+
+---
+
+## Activity 2 — Deep copy
+
+Run from the root of this project (requires Node.js 17+):
+
+```bash
+node jsonActivity2.js
+```
+
+The script:
+1. Defines the original JSON array from Annex 1
+2. Creates a deep copy using `structuredClone` — the original is never mutated
+3. Modifies 6 fields in the copy: `nombre`, `apellidoPat`, `rfc`, `fechaNacimiento`, `email`, `direccion.colonia`
+4. Prints both arrays and a side-by-side verification showing the original is unchanged
