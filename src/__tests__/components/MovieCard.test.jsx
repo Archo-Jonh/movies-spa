@@ -29,8 +29,9 @@ function renderCard(overrides = {}, props = {}) {
 describe('MovieCard', () => {
   it('renders title and year', () => {
     renderCard()
-    expect(screen.getByText('Interstellar')).toBeInTheDocument()
-    expect(screen.getByText('2014')).toBeInTheDocument()
+    // Title and year appear in both card-bottom and overlay — use getAllByText
+    expect(screen.getAllByText('Interstellar')[0]).toBeInTheDocument()
+    expect(screen.getAllByText('2014')[0]).toBeInTheDocument()
   })
 
   it('renders genre tags split by comma', () => {
@@ -98,14 +99,15 @@ describe('MovieCard', () => {
   })
 
   it('uses a placeholder when Poster is N/A', () => {
-    renderCard({ Poster: 'N/A' })
-    const img = screen.getByRole('img')
+    const { container } = renderCard({ Poster: 'N/A' })
+    // Poster img is aria-hidden with alt="" (role=presentation) — query by class
+    const img = container.querySelector('img.card-poster')
     expect(img.src).toContain('data:image/svg+xml')
   })
 
   it('uses the real poster URL when available', () => {
-    renderCard({ Poster: 'https://example.com/poster.jpg' })
-    const img = screen.getByRole('img')
+    const { container } = renderCard({ Poster: 'https://example.com/poster.jpg' })
+    const img = container.querySelector('img.card-poster')
     expect(img.src).toBe('https://example.com/poster.jpg')
   })
 })
