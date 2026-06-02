@@ -249,6 +249,7 @@ export default function App() {
 
       {modalMovie && (
         <MovieModal
+          key={modalMovie.imdbID}
           movie={modalMovie}
           isFavorite={favoriteIdSet.has(modalMovie.imdbID)}
           onToggleFavorite={toggle}

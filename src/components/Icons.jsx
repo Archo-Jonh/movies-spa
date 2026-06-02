@@ -119,6 +119,14 @@ export function IconChevronDown({ size = 18 }) {
 }
 
 // Section-title icons
+export function IconPlay({ size = 18 }) {
+  return (
+    <Svg size={size}>
+      <polygon points="5 3 19 12 5 21 5 3" />
+    </Svg>
+  )
+}
+
 export function IconArrowRight({ size = 18 }) {
   return (
     <Svg size={size}>

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { getMovieDetail } from '../services/omdb'
 import { POSTER_PLACEHOLDER } from '../utils/constants'
-import { IconStar, IconStarFill, IconX, IconWarning } from './Icons'
+import { IconStar, IconStarFill, IconX, IconWarning, IconPlay } from './Icons'
 
 export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClose }) {
   const [detail, setDetail] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showTrailer, setShowTrailer] = useState(false)
   const dialogRef = useRef(null)
   const closeBtnRef = useRef(null)
 
@@ -106,6 +107,7 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
         )}
 
         {d && !loading && (
+          <>
           <div className="modal-content">
             <div className="modal-poster-col">
               <img
@@ -125,6 +127,16 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
                 }
               >
                 {isFavorite ? <><IconStarFill size={15} /> Saved</> : <><IconStar size={15} /> Save</>}
+              </button>
+              <button
+                className={`trailer-btn${showTrailer ? ' trailer-btn--active' : ''}`}
+                onClick={() => setShowTrailer((v) => !v)}
+                aria-expanded={showTrailer}
+                aria-label={showTrailer ? 'Cerrar tráiler' : `Ver tráiler de ${d.Title}`}
+              >
+                {showTrailer
+                  ? <><IconX size={14} /> Cerrar tráiler</>
+                  : <><IconPlay size={14} /> Ver tráiler</>}
               </button>
             </div>
 
@@ -185,6 +197,18 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
               )}
             </div>
           </div>
+
+          {showTrailer && (
+            <div className="modal-trailer">
+              <iframe
+                src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(`${d.Title} ${d.Year} trailer oficial`)}&controls=1&rel=0&modestbranding=1`}
+                title={`Tráiler de ${d.Title}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
+          </>
         )}
       </div>
     </div>

@@ -931,7 +931,7 @@ body::after {
   .modal-content { grid-template-columns: 1fr; }
 }
 
-.modal-poster-col { display: flex; flex-direction: column; }
+.modal-poster-col { display: flex; flex-direction: column; gap: 0.5rem; }
 .modal-poster {
   width: 100%;
   aspect-ratio: 2 / 3;
@@ -994,6 +994,52 @@ body::after {
   flex-shrink: 0;
 }
 .detail-value { color: var(--text-dim); }
+
+/* Trailer button */
+.trailer-btn {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all var(--t);
+}
+.trailer-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.trailer-btn--active {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(196, 80, 80, 0.08);
+}
+.trailer-btn--active:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(196, 80, 80, 0.15);
+}
+
+/* Trailer embed */
+.modal-trailer {
+  padding: 0 1.5rem 1.5rem;
+  animation: fade-in 0.25s ease;
+}
+.modal-trailer iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--r-lg);
+  background: #000;
+  display: block;
+}
 
 .modal-ratings {
   display: flex;

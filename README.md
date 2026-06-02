@@ -118,3 +118,27 @@ El script:
 2. Crea una copia profunda usando `structuredClone` — el original nunca se muta
 3. Modifica 6 campos en la copia: `nombre`, `apellidoPat`, `rfc`, `fechaNacimiento`, `email`, `direccion.colonia`
 4. Imprime ambos arreglos y una verificación comparativa que demuestra que el original no fue modificado
+
+---
+
+## Observaciones
+
+### Carteles de películas con error 404
+
+Si al usar la aplicación notas que algunas tarjetas muestran un póster en gris en lugar de la imagen real de la película, no se trata de un error en el código — es una limitación conocida de la API de OMDb.
+
+**¿Por qué ocurre?**
+
+OMDb almacena los carteles de las películas en servidores de Amazon S3 y entrega su URL dentro del campo `Poster` de cada respuesta. Ocasionalmente, algunas de esas URLs devuelven un error HTTP **404 (Not Found)** por alguna de estas razones:
+
+- El enlace de Amazon S3 expiró o el archivo fue movido/eliminado del servidor.
+- El título no tiene un póster registrado en la base de datos de OMDb, pero en lugar de devolver `"N/A"` (que sería lo esperado), la API devuelve una URL que apunta a un recurso inexistente.
+- La tier gratuita de OMDb tiene ciertas limitaciones en la calidad y disponibilidad de los metadatos, incluidos los carteles.
+
+**Cómo lo maneja esta aplicación**
+
+Cada elemento `<img>` que muestra un cartel incluye un controlador `onError`. En el momento en que el navegador detecta que la imagen no pudo cargarse (404 u otro error de red), el controlador reemplaza automáticamente la fuente de la imagen por un **placeholder SVG** neutro integrado directamente en el código — sin dependencias externas y sin peticiones adicionales a la red.
+
+Esto garantiza que el usuario nunca vea imágenes rotas; en su lugar verá un espacio reservado coherente con la paleta de color de la tarjeta.
+
+> Esta situación es completamente ajena a la implementación de la aplicación y afecta a cualquier cliente que consuma la API pública de OMDb.
