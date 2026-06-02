@@ -8,7 +8,7 @@ const TYPES = [
   { value: 'episode', label: 'Episodes' },
 ]
 
-export default function SearchBar({ onSearch, loading }) {
+export default function SearchBar({ onSearch, onClear, loading }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState('')
   const [year, setYear] = useState('')
@@ -19,6 +19,12 @@ export default function SearchBar({ onSearch, loading }) {
     onSearch({ query: query.trim(), type, year })
   }
 
+  function handleQueryChange(e) {
+    const val = e.target.value
+    setQuery(val)
+    if (val === '') onClear?.()
+  }
+
   return (
     <form className="search-form" onSubmit={handleSubmit} role="search" aria-label="Search movies">
       <div className="search-main-row">
@@ -27,7 +33,7 @@ export default function SearchBar({ onSearch, loading }) {
           type="search"
           placeholder="Search movies, series, episodes..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleQueryChange}
           aria-label="Search by title"
         />
         <button

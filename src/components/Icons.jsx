@@ -119,6 +119,15 @@ export function IconChevronDown({ size = 18 }) {
 }
 
 // Section-title icons
+export function IconArrowRight({ size = 18 }) {
+  return (
+    <Svg size={size}>
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </Svg>
+  )
+}
+
 export function IconFlame({ size = 18 }) {
   return (
     <Svg size={size}>

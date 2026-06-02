@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useMediaQuery } from '../hooks/useMediaQuery'
 import { sortFavorites } from '../utils/sortFavorites'
 import { IconStar, IconStarFill, IconX } from './Icons'
 
@@ -21,7 +20,6 @@ export default function FavoritesSidebar({
   onClose,
 }) {
   const [sort, setSort] = useState('date')
-  const isDesktop = useMediaQuery('(min-width: 1024px)')
   const sorted = sortFavorites(favorites, sort)
 
   return (
@@ -33,7 +31,7 @@ export default function FavoritesSidebar({
         className={`sidebar${isOpen ? ' sidebar--open' : ''}`}
         id="favorites-sidebar"
         aria-label="Favorites"
-        aria-hidden={!isDesktop && !isOpen ? 'true' : undefined}
+        aria-hidden={!isOpen ? 'true' : undefined}
       >
         <div className="sidebar-header">
           <h2 className="sidebar-title">

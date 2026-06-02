@@ -66,6 +66,12 @@ export default function App() {
     [search]
   )
 
+  const handleReset = useCallback(() => {
+    setHasSearched(false)
+    setGenreFilter('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
   const handleOpenModal = useCallback((movie) => {
     setModalMovie(movie)
     setSidebarOpen(false)
@@ -77,10 +83,10 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="app-header-inner">
-          <div className="app-brand" aria-label="Lux">
+          <button className="app-brand" onClick={handleReset} aria-label="Lux — ir al inicio">
             <span className="app-logo" aria-hidden="true"><IconDiamond size={22} /></span>
             <span className="app-name">Lux</span>
-          </div>
+          </button>
           <button
             className={`fav-toggle${favorites.length > 0 ? ' fav-toggle--has' : ''}`}
             onClick={() => setSidebarOpen((o) => !o)}
@@ -103,7 +109,7 @@ export default function App() {
               El Cine <em className="accent">Sin Límites</em>
             </h1>
             <p className="search-sub">Busca entre millones de películas y series. Guarda las que no quieres olvidar.</p>
-            <SearchBar onSearch={handleSearch} loading={loading} />
+            <SearchBar onSearch={handleSearch} onClear={handleReset} loading={loading} />
           </div>
 
           {error && (
@@ -135,6 +141,7 @@ export default function App() {
                 favoriteIdSet={favoriteIdSet}
                 onToggleFavorite={toggle}
                 onMoreInfo={handleOpenModal}
+                onSearch={handleSearch}
               />
               <FeaturedSection
                 title="Series populares"
@@ -144,6 +151,7 @@ export default function App() {
                 favoriteIdSet={favoriteIdSet}
                 onToggleFavorite={toggle}
                 onMoreInfo={handleOpenModal}
+                onSearch={handleSearch}
               />
               <FeaturedSection
                 title="Estrenos"
@@ -154,6 +162,7 @@ export default function App() {
                 favoriteIdSet={favoriteIdSet}
                 onToggleFavorite={toggle}
                 onMoreInfo={handleOpenModal}
+                onSearch={handleSearch}
               />
             </div>
           )}
