@@ -7,6 +7,8 @@ import FavoritesSidebar from './components/FavoritesSidebar'
 import { useMovies } from './hooks/useMovies'
 import { useFavorites } from './hooks/useFavorites'
 
+const SUGGESTIONS = ['Marvel', 'Star Wars', 'Batman', 'Harry Potter', 'Interstellar', 'Fast & Furious']
+
 export default function App() {
   const { movies, total, loading, loadingMore, error, search, loadMore, hasMore } = useMovies()
   const { favorites, toggle, isFavorite, updateFavoriteData } = useFavorites()
@@ -40,12 +42,13 @@ export default function App() {
   useEffect(() => {
     movies.forEach((movie) => {
       if (
-        (movie.Genre !== undefined || movie.Plot !== undefined) &&
+        (movie.Genre !== undefined || movie.Plot !== undefined || movie.imdbRating !== undefined) &&
         favoritesRef.current.some((f) => f.imdbID === movie.imdbID)
       ) {
         updateFavoriteData(movie.imdbID, {
           ...(movie.Genre !== undefined && { Genre: movie.Genre }),
           ...(movie.Plot !== undefined && { Plot: movie.Plot }),
+          ...(movie.imdbRating !== undefined && { imdbRating: movie.imdbRating }),
         })
       }
     })
@@ -71,22 +74,20 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="app-header-inner">
-          <div className="app-brand" aria-label="CineScope home">
+          <div className="app-brand" aria-label="CineScope">
             <span className="app-logo" aria-hidden="true">◈</span>
             <span className="app-name">CineScope</span>
           </div>
           <button
             className={`fav-toggle${favorites.length > 0 ? ' fav-toggle--has' : ''}`}
             onClick={() => setSidebarOpen((o) => !o)}
-            aria-label={`Favorites${favorites.length > 0 ? `, ${favorites.length} saved` : ''}`}
+            aria-label={`Favoritos${favorites.length > 0 ? `, ${favorites.length} guardados` : ''}`}
             aria-expanded={sidebarOpen}
             aria-controls="favorites-sidebar"
           >
             <span aria-hidden="true">★</span>
             {favorites.length > 0 && (
-              <span className="fav-badge" aria-hidden="true">
-                {favorites.length}
-              </span>
+              <span className="fav-badge" aria-hidden="true">{favorites.length}</span>
             )}
           </button>
         </div>
@@ -96,9 +97,9 @@ export default function App() {
         <main className="app-main" id="main-content" tabIndex={-1}>
           <div className="search-section">
             <h1 className="search-heading">
-              Discover <em className="accent">Cinema</em>
+              Descubre <em className="accent">Cinema</em>
             </h1>
-            <p className="search-sub">Search millions of titles from the OMDb database.</p>
+            <p className="search-sub">Millones de títulos de la base de datos OMDb.</p>
             <SearchBar onSearch={handleSearch} loading={loading} />
           </div>
 
@@ -111,33 +112,44 @@ export default function App() {
           {!hasSearched && !loading && (
             <div className="empty-state">
               <div className="empty-icon" aria-hidden="true">◈</div>
-              <p>Enter a title above to start exploring.</p>
+              <p>Busca una película, serie o episodio</p>
+              <div className="suggestions" role="group" aria-label="Búsquedas sugeridas">
+                {SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    className="suggestion-pill"
+                    onClick={() => handleSearch({ query: s, type: '', year: '' })}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {hasSearched && !loading && movies.length === 0 && !error && (
             <div className="empty-state">
               <div className="empty-icon" aria-hidden="true">⊘</div>
-              <p>No results found. Try a different search.</p>
+              <p>Sin resultados. Intenta con otro término.</p>
             </div>
           )}
 
           {hasSearched && total > 0 && (
             <p className="results-count" aria-live="polite">
-              {total.toLocaleString()} result{total !== 1 ? 's' : ''}
-              {genreFilter && ` · ${filteredMovies.length} shown for "${genreFilter}"`}
+              {total.toLocaleString()} resultado{total !== 1 ? 's' : ''}
+              {genreFilter && ` · ${filteredMovies.length} con "${genreFilter}"`}
             </p>
           )}
 
           {availableGenres.length > 0 && (
-            <div className="genre-filter" role="group" aria-label="Filter results by genre">
-              <span className="genre-filter-label" aria-hidden="true">Genre</span>
+            <div className="genre-filter" role="group" aria-label="Filtrar por género">
+              <span className="genre-filter-label" aria-hidden="true">Género</span>
               <button
                 className={`pill pill--sm${!genreFilter ? ' pill--active' : ''}`}
                 onClick={() => setGenreFilter('')}
                 aria-pressed={!genreFilter}
               >
-                All
+                Todos
               </button>
               {availableGenres.map((g) => (
                 <button
@@ -155,11 +167,11 @@ export default function App() {
           <div
             className="movies-grid"
             aria-live="polite"
-            aria-label="Search results"
+            aria-label="Resultados de búsqueda"
             aria-busy={loading}
           >
             {loading
-              ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
+              ? Array.from({ length: 10 }).map((_, i) => <SkeletonCard key={i} />)
               : filteredMovies.map((movie, index) => (
                   <MovieCard
                     key={movie.imdbID}
@@ -180,7 +192,7 @@ export default function App() {
                 disabled={loadingMore}
                 aria-busy={loadingMore}
               >
-                {loadingMore ? 'Loading...' : 'Load more'}
+                {loadingMore ? 'Cargando...' : 'Cargar más'}
               </button>
             </div>
           )}

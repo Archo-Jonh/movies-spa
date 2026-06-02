@@ -23,9 +23,10 @@ export function useMovies() {
             detailCache.current[imdbID] = {
               Genre: d.Genre && d.Genre !== 'N/A' ? d.Genre : null,
               Plot: d.Plot && d.Plot !== 'N/A' ? d.Plot : null,
+              imdbRating: d.imdbRating && d.imdbRating !== 'N/A' ? d.imdbRating : null,
             }
           } catch {
-            detailCache.current[imdbID] = { Genre: null, Plot: null }
+            detailCache.current[imdbID] = { Genre: null, Plot: null, imdbRating: null }
           }
         })
     )
@@ -34,15 +35,15 @@ export function useMovies() {
       prev.map((m) => {
         const cached = detailCache.current[m.imdbID]
         if (!cached) return m
-        return { ...m, Genre: cached.Genre, Plot: cached.Plot }
+        return { ...m, Genre: cached.Genre, Plot: cached.Plot, imdbRating: cached.imdbRating }
       })
     )
   }, [])
 
   const applyCache = (m) => {
     const cached = detailCache.current[m.imdbID]
-    if (!cached) return { ...m, Genre: undefined, Plot: undefined }
-    return { ...m, Genre: cached.Genre, Plot: cached.Plot }
+    if (!cached) return { ...m, Genre: undefined, Plot: undefined, imdbRating: undefined }
+    return { ...m, Genre: cached.Genre, Plot: cached.Plot, imdbRating: cached.imdbRating }
   }
 
   const search = useCallback(
