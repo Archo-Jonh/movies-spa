@@ -28,7 +28,6 @@ export function useFavorites() {
     [favorites]
   )
 
-  // Patches Genre/Plot into a saved favorite once background fetch resolves
   const updateFavoriteData = useCallback((imdbID, updates) => {
     setFavorites((prev) => {
       const idx = prev.findIndex((f) => f.imdbID === imdbID)

@@ -12,7 +12,6 @@ function mockFetch(body, ok = true) {
 describe('omdb service', () => {
   beforeEach(() => vi.resetAllMocks())
 
-  // ── searchMovies ─────────────────────────────────────────
   describe('searchMovies', () => {
     it('returns Search array on success', async () => {
       mockFetch({
@@ -68,7 +67,6 @@ describe('omdb service', () => {
     })
   })
 
-  // ── getMovieDetail ────────────────────────────────────────
   describe('getMovieDetail', () => {
     it('returns full detail on success', async () => {
       mockFetch({ Response: 'True', imdbID: 'tt1', Title: 'Inception', Genre: 'Sci-Fi' })

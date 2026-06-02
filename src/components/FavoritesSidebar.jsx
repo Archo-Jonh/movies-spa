@@ -32,7 +32,6 @@ export default function FavoritesSidebar({
         className={`sidebar${isOpen ? ' sidebar--open' : ''}`}
         id="favorites-sidebar"
         aria-label="Favorites"
-        // Only hide from AT on mobile when the drawer is closed (off-screen)
         aria-hidden={!isDesktop && !isOpen ? 'true' : undefined}
       >
         <div className="sidebar-header">

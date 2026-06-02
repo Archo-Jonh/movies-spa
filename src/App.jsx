@@ -16,13 +16,11 @@ export default function App() {
   const [hasSearched, setHasSearched] = useState(false)
   const [genreFilter, setGenreFilter] = useState('')
 
-  // O(1) favorite lookup for the grid
   const favoriteIdSet = useMemo(
     () => new Set(favorites.map((f) => f.imdbID)),
     [favorites]
   )
 
-  // Genres available from currently loaded movies (populated by background fetches)
   const availableGenres = useMemo(() => {
     const set = new Set()
     movies.forEach((m) => {
@@ -31,13 +29,11 @@ export default function App() {
     return [...set].sort()
   }, [movies])
 
-  // Client-side genre filter applied on top of API search results
   const filteredMovies = useMemo(() => {
     if (!genreFilter) return movies
     return movies.filter((m) => m.Genre?.includes(genreFilter))
   }, [movies, genreFilter])
 
-  // Sync Genre + Plot into favorites once background fetch resolves
   const favoritesRef = useRef(favorites)
   useEffect(() => { favoritesRef.current = favorites }, [favorites])
 

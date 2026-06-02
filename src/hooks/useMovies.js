@@ -13,7 +13,6 @@ export function useMovies() {
   const detailCache = useRef({})
   const searchId = useRef(0)
 
-  // Fetches Genre + Plot for each result in the background and patches movie state
   const fetchDetails = useCallback(async (results, sid) => {
     await Promise.allSettled(
       results
@@ -40,7 +39,6 @@ export function useMovies() {
     )
   }, [])
 
-  // Resolves cached Genre/Plot for a search result (undefined = not cached yet)
   const applyCache = (m) => {
     const cached = detailCache.current[m.imdbID]
     if (!cached) return { ...m, Genre: undefined, Plot: undefined }
@@ -77,7 +75,6 @@ export function useMovies() {
       const nextPage = page + 1
       const data = await searchMovies({ ...lastFilters.current, page: nextPage })
       const newResults = data.Search.map(applyCache)
-      // Guard against a new search firing while this request was in-flight
       if (searchId.current !== sid) return
       setMovies((prev) => [...prev, ...newResults])
       setPage(nextPage)

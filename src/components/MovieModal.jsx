@@ -9,7 +9,6 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
   const dialogRef = useRef(null)
   const closeBtnRef = useRef(null)
 
-  // Fix: cancelled flag prevents setState on unmounted component (memory leak)
   useEffect(() => {
     let cancelled = false
     setLoading(true)
@@ -23,7 +22,6 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
   }, [movie.imdbID])
 
   useEffect(() => {
-    // Fix: capture prevFocus BEFORE moving focus so it restores correctly on close
     const prevFocus = document.activeElement
     closeBtnRef.current?.focus()
 
