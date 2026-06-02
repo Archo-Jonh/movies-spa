@@ -14,7 +14,7 @@ const SUGGESTIONS = ['Marvel', 'Star Wars', 'Batman', 'Harry Potter', 'Interstel
 
 export default function App() {
   const { movies, total, loading, loadingMore, error, search, loadMore, hasMore } = useMovies()
-  const { favorites, toggle, isFavorite, updateFavoriteData } = useFavorites()
+  const { favorites, toggle, updateFavoriteData } = useFavorites()
 
   const [modalMovie, setModalMovie] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)

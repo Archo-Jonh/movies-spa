@@ -65,7 +65,7 @@ export function useMovies() {
         setLoading(false)
       }
     },
-    [fetchDetails] // eslint-disable-line react-hooks/exhaustive-deps
+    [fetchDetails]
   )
 
   const loadMore = useCallback(async () => {
@@ -85,7 +85,7 @@ export function useMovies() {
     } finally {
       setLoadingMore(false)
     }
-  }, [page, fetchDetails]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page, fetchDetails])
 
   const hasMore = movies.length < total && movies.length > 0
 

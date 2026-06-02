@@ -22,8 +22,8 @@ export default function FeaturedSection({ title, icon, query, type = '', year = 
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    setFailed(false)
+    setLoading(true)  // eslint-disable-line react-hooks/set-state-in-effect
+    setFailed(false)  // eslint-disable-line react-hooks/set-state-in-effect
 
     searchMovies({ query, type, year, page: 1 })
       .then((data) => {

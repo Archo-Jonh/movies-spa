@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { searchMovies, getMovieDetail } from '../../services/omdb'
 
 function mockFetch(body, ok = true) {
-  global.fetch = vi.fn().mockResolvedValue({
+  globalThis.fetch = vi.fn().mockResolvedValue({
     ok,
     status: ok ? 200 : 500,
     json: () => Promise.resolve(body),
@@ -37,19 +37,19 @@ describe('omdb service', () => {
     it('appends type param when provided', async () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'batman', type: 'movie' })
-      expect(global.fetch.mock.calls[0][0]).toContain('type=movie')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('type=movie')
     })
 
     it('appends year param when provided', async () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'batman', year: '2022' })
-      expect(global.fetch.mock.calls[0][0]).toContain('y=2022')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('y=2022')
     })
 
     it('omits type and year when not provided', async () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'test' })
-      const url = global.fetch.mock.calls[0][0]
+      const url = globalThis.fetch.mock.calls[0][0]
       expect(url).not.toContain('type=')
       expect(url).not.toContain('y=')
     })
@@ -57,13 +57,13 @@ describe('omdb service', () => {
     it('defaults to page 1', async () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'test' })
-      expect(global.fetch.mock.calls[0][0]).toContain('page=1')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('page=1')
     })
 
     it('passes explicit page number', async () => {
       mockFetch({ Response: 'True', Search: [], totalResults: '0' })
       await searchMovies({ query: 'test', page: 3 })
-      expect(global.fetch.mock.calls[0][0]).toContain('page=3')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('page=3')
     })
   })
 
@@ -78,13 +78,13 @@ describe('omdb service', () => {
     it('requests full plot', async () => {
       mockFetch({ Response: 'True', imdbID: 'tt1' })
       await getMovieDetail('tt1')
-      expect(global.fetch.mock.calls[0][0]).toContain('plot=full')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('plot=full')
     })
 
     it('uses imdbID param in URL', async () => {
       mockFetch({ Response: 'True', imdbID: 'tt1234567' })
       await getMovieDetail('tt1234567')
-      expect(global.fetch.mock.calls[0][0]).toContain('i=tt1234567')
+      expect(globalThis.fetch.mock.calls[0][0]).toContain('i=tt1234567')
     })
 
     it('throws when Response is False', async () => {

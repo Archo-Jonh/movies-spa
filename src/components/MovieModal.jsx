@@ -12,9 +12,11 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
 
   useEffect(() => {
     let cancelled = false
+    /* eslint-disable react-hooks/set-state-in-effect */
     setLoading(true)
     setError(null)
     setDetail(null)
+    /* eslint-enable react-hooks/set-state-in-effect */
     getMovieDetail(movie.imdbID)
       .then((data) => { if (!cancelled) setDetail(data) })
       .catch((err) => { if (!cancelled) setError(err.message) })
