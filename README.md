@@ -1,4 +1,4 @@
-# CineScope — Movie SPA
+# Lux — Movie SPA
 
 Aplicación de página única para buscar, descubrir y guardar películas y series usando la [OMDb API](https://www.omdbapi.com/).
 
@@ -60,12 +60,19 @@ src/
 │   ├── MovieCard.jsx         # Tarjeta de resultado con póster, géneros y favorito
 │   ├── SkeletonCard.jsx      # Tarjeta de carga (skeleton loader)
 │   ├── MovieModal.jsx        # Modal accesible con detalle completo
-│   └── FavoritesSidebar.jsx  # Sidebar de favoritos con ordenación
+│   ├── FavoritesSidebar.jsx  # Sidebar de favoritos con ordenación
+│   ├── FeaturedSection.jsx   # Carrusel horizontal de películas precargadas
+│   ├── GenreGrid.jsx         # Grid de tarjetas de género para exploración inicial
+│   └── Icons.jsx             # Librería de iconos SVG inline (sin dependencias extra)
 ├── hooks/
 │   ├── useMovies.js          # Estado de búsqueda, paginación y fetch de géneros
-│   └── useFavorites.js       # Persistencia de favoritos en LocalStorage
+│   ├── useFavorites.js       # Persistencia de favoritos en LocalStorage
+│   └── useMediaQuery.js      # Hook para detectar breakpoints responsive
 ├── services/
 │   └── omdb.js               # Wrapper de la API OMDb (searchMovies, getMovieDetail)
+├── utils/
+│   ├── constants.js          # Constantes compartidas (placeholder SVG, etc.)
+│   └── sortFavorites.js      # Lógica de ordenación de favoritos (A-Z, género, fecha)
 ├── App.jsx                   # Layout principal: header, main, sidebar, modal
 ├── index.css                 # Sistema de diseño global (tokens, componentes)
 └── main.jsx                  # Punto de entrada de React

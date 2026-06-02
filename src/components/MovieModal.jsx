@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getMovieDetail } from '../services/omdb'
 import { POSTER_PLACEHOLDER } from '../utils/constants'
+import { IconStar, IconStarFill, IconX, IconWarning } from './Icons'
 
 export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClose }) {
   const [detail, setDetail] = useState(null)
@@ -85,7 +86,7 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
             onClick={onClose}
             aria-label="Close dialog"
           >
-            ✕
+            <IconX size={16} />
           </button>
         </div>
 
@@ -97,7 +98,7 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
 
         {error && !loading && (
           <div className="modal-error" role="alert">
-            <span>⚠</span>
+            <IconWarning size={28} />
             <p>{error}</p>
           </div>
         )}
@@ -105,7 +106,12 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
         {d && !loading && (
           <div className="modal-content">
             <div className="modal-poster-col">
-              <img className="modal-poster" src={poster} alt={`Poster for ${d.Title}`} />
+              <img
+                className="modal-poster"
+                src={poster}
+                alt={`Poster for ${d.Title}`}
+                onError={(e) => { e.currentTarget.src = POSTER_PLACEHOLDER }}
+              />
               <button
                 className={`fav-btn fav-btn--lg${isFavorite ? ' fav-btn--active' : ''}`}
                 onClick={() => onToggleFavorite(d)}
@@ -116,7 +122,7 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
                     : `Add ${d.Title} to favorites`
                 }
               >
-                {isFavorite ? '★ Saved' : '☆ Save'}
+                {isFavorite ? <><IconStarFill size={15} /> Saved</> : <><IconStar size={15} /> Save</>}
               </button>
             </div>
 

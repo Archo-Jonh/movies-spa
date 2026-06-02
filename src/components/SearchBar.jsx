@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { IconSearch } from './Icons'
 
 const TYPES = [
   { value: '', label: 'All' },
@@ -36,7 +37,11 @@ export default function SearchBar({ onSearch, loading }) {
           aria-busy={loading}
           aria-label="Search"
         >
-          {loading ? <span className="search-spinner" aria-hidden="true" /> : 'Search'}
+          {loading ? (
+            <span className="search-spinner" aria-hidden="true" />
+          ) : (
+            <><IconSearch size={15} /><span>Search</span></>
+          )}
         </button>
       </div>
 

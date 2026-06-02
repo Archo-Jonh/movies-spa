@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { sortFavorites } from '../utils/sortFavorites'
+import { IconStar, IconStarFill, IconX } from './Icons'
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'Date added' },
@@ -36,7 +37,7 @@ export default function FavoritesSidebar({
       >
         <div className="sidebar-header">
           <h2 className="sidebar-title">
-            <span aria-hidden="true">★</span> Favorites
+            <IconStarFill size={16} /> Favorites
             {favorites.length > 0 && (
               <span className="sidebar-count" aria-label={`${favorites.length} saved`}>
                 {favorites.length}
@@ -48,7 +49,7 @@ export default function FavoritesSidebar({
             onClick={onClose}
             aria-label="Close favorites panel"
           >
-            ✕
+            <IconX size={14} />
           </button>
         </div>
 
@@ -70,12 +71,12 @@ export default function FavoritesSidebar({
         {favorites.length === 0 ? (
           <div className="sidebar-empty">
             <span className="sidebar-empty-icon" aria-hidden="true">
-              ☆
+              <IconStar size={36} />
             </span>
             <p>
               No favorites yet.
               <br />
-              Tap ☆ on any title to save it here.
+              Tap the star on any title to save it here.
             </p>
           </div>
         ) : (
@@ -98,6 +99,7 @@ export default function FavoritesSidebar({
                     aria-hidden="true"
                     width={48}
                     height={72}
+                    onError={(e) => { e.currentTarget.src = THUMB_PLACEHOLDER }}
                   />
                   <div className="fav-info">
                     <span className="fav-title">{movie.Title}</span>
@@ -112,7 +114,7 @@ export default function FavoritesSidebar({
                   onClick={() => onToggleFavorite(movie)}
                   aria-label={`Remove ${movie.Title} from favorites`}
                 >
-                  ✕
+                  <IconX size={13} />
                 </button>
               </li>
             ))}

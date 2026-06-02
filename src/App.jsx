@@ -4,6 +4,9 @@ import MovieCard from './components/MovieCard'
 import SkeletonCard from './components/SkeletonCard'
 import MovieModal from './components/MovieModal'
 import FavoritesSidebar from './components/FavoritesSidebar'
+import FeaturedSection from './components/FeaturedSection'
+import GenreGrid from './components/GenreGrid'
+import { IconDiamond, IconStar, IconStarFill, IconWarning, IconSearchX, IconFlame, IconTv, IconClapperboard } from './components/Icons'
 import { useMovies } from './hooks/useMovies'
 import { useFavorites } from './hooks/useFavorites'
 
@@ -74,9 +77,9 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="app-header-inner">
-          <div className="app-brand" aria-label="CineScope">
-            <span className="app-logo" aria-hidden="true">◈</span>
-            <span className="app-name">CineScope</span>
+          <div className="app-brand" aria-label="Lux">
+            <span className="app-logo" aria-hidden="true"><IconDiamond size={22} /></span>
+            <span className="app-name">Lux</span>
           </div>
           <button
             className={`fav-toggle${favorites.length > 0 ? ' fav-toggle--has' : ''}`}
@@ -85,7 +88,7 @@ export default function App() {
             aria-expanded={sidebarOpen}
             aria-controls="favorites-sidebar"
           >
-            <span aria-hidden="true">★</span>
+            {favorites.length > 0 ? <IconStarFill size={18} /> : <IconStar size={18} />}
             {favorites.length > 0 && (
               <span className="fav-badge" aria-hidden="true">{favorites.length}</span>
             )}
@@ -97,23 +100,21 @@ export default function App() {
         <main className="app-main" id="main-content" tabIndex={-1}>
           <div className="search-section">
             <h1 className="search-heading">
-              Descubre <em className="accent">Cinema</em>
+              El Cine <em className="accent">Sin Límites</em>
             </h1>
-            <p className="search-sub">Millones de títulos de la base de datos OMDb.</p>
+            <p className="search-sub">Busca entre millones de películas y series. Guarda las que no quieres olvidar.</p>
             <SearchBar onSearch={handleSearch} loading={loading} />
           </div>
 
           {error && (
             <div className="status-error" role="alert">
-              <span aria-hidden="true">⚠</span> {error}
+              <IconWarning size={16} /> {error}
             </div>
           )}
 
           {!hasSearched && !loading && (
-            <div className="empty-state">
-              <div className="empty-icon" aria-hidden="true">◈</div>
-              <p>Busca una película, serie o episodio</p>
-              <div className="suggestions" role="group" aria-label="Búsquedas sugeridas">
+            <div className="home-state">
+              <div className="suggestions-row" role="group" aria-label="Búsquedas sugeridas">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
@@ -124,12 +125,42 @@ export default function App() {
                   </button>
                 ))}
               </div>
+
+              <GenreGrid onSearch={handleSearch} />
+
+              <FeaturedSection
+                title="Tendencias"
+                icon={<IconFlame size={20} />}
+                query="marvel"
+                favoriteIdSet={favoriteIdSet}
+                onToggleFavorite={toggle}
+                onMoreInfo={handleOpenModal}
+              />
+              <FeaturedSection
+                title="Series populares"
+                icon={<IconTv size={20} />}
+                query="breaking"
+                type="series"
+                favoriteIdSet={favoriteIdSet}
+                onToggleFavorite={toggle}
+                onMoreInfo={handleOpenModal}
+              />
+              <FeaturedSection
+                title="Estrenos"
+                icon={<IconClapperboard size={20} />}
+                query="movie"
+                type="movie"
+                year={new Date().getFullYear().toString()}
+                favoriteIdSet={favoriteIdSet}
+                onToggleFavorite={toggle}
+                onMoreInfo={handleOpenModal}
+              />
             </div>
           )}
 
           {hasSearched && !loading && movies.length === 0 && !error && (
             <div className="empty-state">
-              <div className="empty-icon" aria-hidden="true">⊘</div>
+              <div className="empty-icon" aria-hidden="true"><IconSearchX size={48} /></div>
               <p>Sin resultados. Intenta con otro término.</p>
             </div>
           )}
