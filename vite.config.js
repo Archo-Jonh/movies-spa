@@ -7,6 +7,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.js'],
+    transformMode: {
+      web: [/\.[jt]sx$/],
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
