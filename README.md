@@ -69,7 +69,8 @@ src/
 │   ├── useFavorites.js       # Persistencia de favoritos en LocalStorage
 │   └── useMediaQuery.js      # Hook para detectar breakpoints responsive
 ├── services/
-│   └── omdb.js               # Wrapper de la API OMDb (searchMovies, getMovieDetail)
+│   ├── omdb.js               # Wrapper de la API OMDb (searchMovies, getMovieDetail)
+│   └── youtube.js            # Búsqueda de tráiler por ID via YouTube Data API v3
 ├── utils/
 │   ├── constants.js          # Constantes compartidas (placeholder SVG, etc.)
 │   └── sortFavorites.js      # Lógica de ordenación de favoritos (A-Z, género, fecha)
@@ -142,3 +143,23 @@ Cada elemento `<img>` que muestra un cartel incluye un controlador `onError`. En
 Esto garantiza que el usuario nunca vea imágenes rotas; en su lugar verá un espacio reservado coherente con la paleta de color de la tarjeta.
 
 > Esta situación es completamente ajena a la implementación de la aplicación y afecta a cualquier cliente que consuma la API pública de OMDb.
+
+### Uso de YouTube Data API v3 para el tráiler
+
+La funcionalidad de tráiler utiliza la **YouTube Data API v3** en lugar de un simple enlace embebido. La razón es que el parámetro `listType=search` que YouTube ofrecía en sus URLs de embed para buscar videos directamente fue descontinuado y ya no funciona — el reproductor simplemente devuelve "video no disponible" sin importar el título que se busque.
+
+La alternativa que sí funciona es hacer una llamada al endpoint de búsqueda de la API (`/youtube/v3/search`), obtener el `videoId` del primer resultado relevante, y construir la URL de embed con ese ID. De esta manera el video que se muestra es el correcto y se reproduce directamente dentro del modal.
+
+**Configuración necesaria**
+
+Obtén una API key gratuita en [Google Cloud Console](https://console.cloud.google.com/):
+
+1. Crea un proyecto y habilita **YouTube Data API v3**
+2. Ve a *Credentials* → *Create API Key*
+3. Agrega la key al archivo `.env`:
+
+```env
+VITE_YOUTUBE_KEY=tu_api_key_aqui
+```
+
+La cuota gratuita por defecto es de 10,000 unidades diarias. Cada búsqueda de tráiler consume 100 unidades, lo que equivale a unas 100 búsquedas por día sin costo.
