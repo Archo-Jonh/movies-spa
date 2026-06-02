@@ -1040,6 +1040,20 @@ body::after {
   background: #000;
   display: block;
 }
+.trailer-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 16 / 9;
+}
+.trailer-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--clr-accent);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
 
 .modal-ratings {
   display: flex;

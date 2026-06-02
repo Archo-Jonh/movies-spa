@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getMovieDetail } from '../services/omdb'
+import { searchTrailerVideoId } from '../services/youtube'
 import { POSTER_PLACEHOLDER } from '../utils/constants'
 import { IconStar, IconStarFill, IconX, IconWarning, IconPlay } from './Icons'
 
@@ -8,6 +9,9 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showTrailer, setShowTrailer] = useState(false)
+  const [trailerId, setTrailerId] = useState(null)
+  const [trailerLoading, setTrailerLoading] = useState(false)
+  const [trailerError, setTrailerError] = useState(null)
   const dialogRef = useRef(null)
   const closeBtnRef = useRef(null)
 
@@ -130,7 +134,21 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
               </button>
               <button
                 className={`trailer-btn${showTrailer ? ' trailer-btn--active' : ''}`}
-                onClick={() => setShowTrailer((v) => !v)}
+                onClick={() => {
+                  if (showTrailer) {
+                    setShowTrailer(false)
+                  } else {
+                    setShowTrailer(true)
+                    if (!trailerId && !trailerLoading) {
+                      setTrailerLoading(true)
+                      setTrailerError(null)
+                      searchTrailerVideoId(d.Title, d.Year)
+                        .then((id) => setTrailerId(id))
+                        .catch((err) => setTrailerError(err.message))
+                        .finally(() => setTrailerLoading(false))
+                    }
+                  }
+                }}
                 aria-expanded={showTrailer}
                 aria-label={showTrailer ? 'Cerrar tráiler' : `Ver tráiler de ${d.Title}`}
               >
@@ -200,12 +218,25 @@ export default function MovieModal({ movie, isFavorite, onToggleFavorite, onClos
 
           {showTrailer && (
             <div className="modal-trailer">
-              <iframe
-                src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(`${d.Title} ${d.Year} trailer oficial`)}&controls=1&rel=0&modestbranding=1`}
-                title={`Tráiler de ${d.Title}`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {trailerLoading && (
+                <div className="trailer-loading" aria-live="polite">
+                  <div className="modal-spinner" aria-label="Cargando tráiler" />
+                </div>
+              )}
+              {trailerError && !trailerLoading && (
+                <div className="trailer-error" role="alert">
+                  <IconWarning size={18} />
+                  <span>{trailerError}</span>
+                </div>
+              )}
+              {trailerId && !trailerLoading && (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&controls=1&rel=0&modestbranding=1`}
+                  title={`Tráiler de ${d.Title}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
             </div>
           )}
           </>
