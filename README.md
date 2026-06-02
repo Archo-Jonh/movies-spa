@@ -1,113 +1,113 @@
 # CineScope — Movie SPA
 
-A single-page application for searching, discovering, and saving movies and series using the [OMDb API](https://www.omdbapi.com/).
+Aplicación de página única para buscar, descubrir y guardar películas y series usando la [OMDb API](https://www.omdbapi.com/).
 
 ---
 
-## Setup
+## Configuración
 
-### 1. Install dependencies
+### 1. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### 2. Configure your API key
+### 2. Configurar la API key
 
-Copy `.env.example` to `.env` and add your free OMDb API key:
+Copia `.env.example` a `.env` y agrega tu API key gratuita de OMDb:
 
 ```bash
 cp .env.example .env
 ```
 
-Get a free key at [https://www.omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx).
+Obtén tu key gratis en [https://www.omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx).
 
 ```env
-VITE_OMDB_KEY=your_api_key_here
+VITE_OMDB_KEY=tu_api_key_aqui
 ```
 
-### 3. Run the development server
+### 3. Iniciar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-App will be available at `http://localhost:5173`.
+La app estará disponible en `http://localhost:5173`.
 
 ---
 
 ## Scripts
 
-| Command | Description |
+| Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Start Vite dev server with HMR |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format source files with Prettier |
-| `npm test` | Run tests in watch mode (Vitest) |
-| `npm run test:run` | Run tests once (CI mode) |
-| `npm run coverage` | Run tests and generate coverage report |
+| `npm run dev` | Inicia el servidor de desarrollo Vite con HMR |
+| `npm run build` | Genera el build de producción en `dist/` |
+| `npm run preview` | Vista previa del build de producción |
+| `npm run lint` | Ejecuta ESLint |
+| `npm run format` | Formatea los archivos fuente con Prettier |
+| `npm test` | Ejecuta los tests en modo watch (Vitest) |
+| `npm run test:run` | Ejecuta los tests una sola vez (modo CI) |
+| `npm run coverage` | Ejecuta los tests y genera reporte de cobertura |
 
 ---
 
-## Architecture
+## Arquitectura
 
 ```
 src/
 ├── components/
-│   ├── SearchBar.jsx         # Search form with type/year filters
-│   ├── MovieCard.jsx         # Result card with poster, genre, favorite toggle
-│   ├── SkeletonCard.jsx      # Loading placeholder card
-│   ├── MovieModal.jsx        # Accessible detail modal (full plot, ratings, cast)
-│   └── FavoritesSidebar.jsx  # Sortable sidebar for saved movies
+│   ├── SearchBar.jsx         # Formulario de búsqueda con filtros de tipo y año
+│   ├── MovieCard.jsx         # Tarjeta de resultado con póster, géneros y favorito
+│   ├── SkeletonCard.jsx      # Tarjeta de carga (skeleton loader)
+│   ├── MovieModal.jsx        # Modal accesible con detalle completo
+│   └── FavoritesSidebar.jsx  # Sidebar de favoritos con ordenación
 ├── hooks/
-│   ├── useMovies.js          # Search state, pagination, background genre fetching
-│   └── useFavorites.js       # LocalStorage persistence for favorites
+│   ├── useMovies.js          # Estado de búsqueda, paginación y fetch de géneros
+│   └── useFavorites.js       # Persistencia de favoritos en LocalStorage
 ├── services/
-│   └── omdb.js               # OMDb API wrapper (searchMovies, getMovieDetail)
-├── App.jsx                   # Root layout: header, main, sidebar, modal
-├── index.css                 # Global design system (tokens, components)
-└── main.jsx                  # React entry point
+│   └── omdb.js               # Wrapper de la API OMDb (searchMovies, getMovieDetail)
+├── App.jsx                   # Layout principal: header, main, sidebar, modal
+├── index.css                 # Sistema de diseño global (tokens, componentes)
+└── main.jsx                  # Punto de entrada de React
 ```
 
-### Main dependencies
+### Dependencias principales
 
-| Package | Purpose |
-|---------|---------|
-| React 19 | UI framework |
-| Vite 8 | Build tool and dev server |
-| ESLint | Static analysis |
-| Prettier | Code formatting |
+| Paquete | Propósito |
+|---------|-----------|
+| React 19 | Framework de UI |
+| Vite 8 | Build tool y servidor de desarrollo |
+| ESLint | Análisis estático de código |
+| Prettier | Formateo de código |
 
-No additional runtime libraries — pure React hooks and the browser's native `fetch` and `localStorage`.
-
----
-
-## Technical decisions
-
-**Genre fetching strategy** — OMDb's search endpoint (`s=`) does not return genre data. After each search, the app fires parallel `getMovieDetail` calls for all result IDs in the background, caching the results. Cards display a subtle "Loading..." tag while waiting and fill in automatically. A `searchId` ref prevents stale responses from previous searches from overwriting current results.
-
-**State management** — Two custom hooks (`useMovies`, `useFavorites`) cover all state. No external store needed for this scale. The `useFavorites` hook syncs automatically to `localStorage` on every change via `useEffect`.
-
-**Pagination** — "Load more" button appends results to the existing grid, preserving scroll position and previously loaded cards.
-
-**Accessibility** — Modal uses `role="dialog"`, `aria-modal="true"`, focus trap (Tab/Shift-Tab cycling), and `Escape` to close. Favorite buttons use `aria-pressed`. Loading states use `aria-live` and `aria-busy`. All interactive elements have descriptive `aria-label` attributes.
-
-**API key security** — Key is stored in a `.env` file (gitignored) and accessed via `import.meta.env.VITE_OMDB_KEY`. Never hard-coded.
+Sin librerías adicionales en runtime — solo React hooks y las APIs nativas del navegador (`fetch` y `localStorage`).
 
 ---
 
-## Activity 2 — Deep copy
+## Decisiones técnicas
 
-Run from the root of this project (requires Node.js 17+):
+**Estrategia de obtención de géneros** — El endpoint de búsqueda de OMDb (`s=`) no devuelve datos de género. Después de cada búsqueda, la app dispara llamadas paralelas a `getMovieDetail` en segundo plano para cada `imdbID`, almacenando los resultados en caché. Las tarjetas muestran "Loading..." mientras esperan y se actualizan automáticamente. Una ref `searchId` previene que respuestas de búsquedas anteriores sobreescriban los resultados actuales.
+
+**Manejo de estado** — Dos hooks personalizados (`useMovies`, `useFavorites`) cubren todo el estado. No se necesita un store externo para esta escala. El hook `useFavorites` se sincroniza automáticamente con `localStorage` en cada cambio mediante `useEffect`.
+
+**Paginación** — El botón "Load more" agrega resultados al grid existente, conservando la posición del scroll y las tarjetas ya cargadas.
+
+**Accesibilidad** — El modal usa `role="dialog"`, `aria-modal="true"`, trampa de foco (ciclo Tab/Shift-Tab) y `Escape` para cerrar. Los botones de favorito usan `aria-pressed`. Los estados de carga usan `aria-live` y `aria-busy`. Todos los elementos interactivos tienen atributos `aria-label` descriptivos.
+
+**Seguridad de la API key** — La key se almacena en un archivo `.env` (ignorado por git) y se accede mediante `import.meta.env.VITE_OMDB_KEY`. Nunca se escribe directamente en el código.
+
+---
+
+## Actividad 2 — Deep copy
+
+Ejecutar desde la raíz del proyecto (requiere Node.js 17+):
 
 ```bash
 node jsonActivity2.js
 ```
 
-The script:
-1. Defines the original JSON array from Annex 1
-2. Creates a deep copy using `structuredClone` — the original is never mutated
-3. Modifies 6 fields in the copy: `nombre`, `apellidoPat`, `rfc`, `fechaNacimiento`, `email`, `direccion.colonia`
-4. Prints both arrays and a side-by-side verification showing the original is unchanged
+El script:
+1. Define el arreglo JSON original del Anexo 1
+2. Crea una copia profunda usando `structuredClone` — el original nunca se muta
+3. Modifica 6 campos en la copia: `nombre`, `apellidoPat`, `rfc`, `fechaNacimiento`, `email`, `direccion.colonia`
+4. Imprime ambos arreglos y una verificación comparativa que demuestra que el original no fue modificado
